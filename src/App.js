@@ -5,7 +5,7 @@ import { BrowserRouter, Link, Route, Switch, Redirect } from 'react-router-dom';
 import { DefaultPage } from './pages/DefaultPage';
 import { FuelHistory } from './pages/FuelHistory/FuelHistory';
 import { Header } from './components/Header/Header';
-import { MainPage } from './components/MainPage/MainPage';
+import { MainPage } from './containers/MainPage/MainPage';
 
 function App() {
   const routes = {
