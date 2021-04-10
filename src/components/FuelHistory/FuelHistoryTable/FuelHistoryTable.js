@@ -16,7 +16,9 @@ const columns = [
           </div>
           <div>
             <div>{row?.name}</div>
-            <div>{VehicleStatus[row?.status]}</div>
+            <div style={{ color: VehicleStatus[row?.status].color }}>
+              {VehicleStatus[row?.status].label}
+            </div>
           </div>
         </div>
       );
@@ -80,5 +82,5 @@ const data = [
 ];
 
 export const FuelHistoryTable = () => {
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={data} top="topRight" />;
 };

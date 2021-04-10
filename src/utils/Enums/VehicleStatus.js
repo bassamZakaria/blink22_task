@@ -1,5 +1,5 @@
 export const VehicleStatus = {
-  ACTIVE: 'Active',
-  IN_SHOP: 'In Shop',
-  OUT_OF_SERVICE: 'Out of service',
+  ACTIVE: { label: 'Active', color: 'green' },
+  IN_SHOP: { label: 'In Shop', color: 'orange' },
+  OUT_OF_SERVICE: { label: 'Out of service', color: 'red' },
 };
