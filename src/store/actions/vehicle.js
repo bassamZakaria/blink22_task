@@ -14,9 +14,9 @@ export const addVehicle = vehicle => {
   };
 };
 
-export const deleteVehicle = vehicle => {
+export const deleteVehicle = vehicleId => {
   return {
     type: DELETE_VEHICLE,
-    vehicle,
+    vehicleId,
   };
 };

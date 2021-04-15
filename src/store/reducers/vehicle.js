@@ -1,19 +1,20 @@
 import { ADD_VEHICLE, DELETE_VEHICLE, SET_VEHICLES } from '../actionTypes';
+import * as dotProp from 'dot-prop-immutable';
 
 const initalState = {
   vehicles: {},
 };
 
 const setVehicles = (state, action) => {
-  return state;
+  return dotProp.set(state, 'vehicles', action?.vehicles);
 };
 
 const addVehicle = (state, action) => {
-  return state;
+  return dotProp.set(state, `vehicles.${action.vehicle.key}`, action.vehicle);
 };
 
 const deleteVehicle = (state, action) => {
-  return state;
+  return dotProp.delete(state, `vehicles.${action.vehicleId}`);
 };
 
 export default (state = initalState, action) => {
