@@ -6,6 +6,7 @@ import { VEHICLES_SORT } from '../../utils/Enums/VehiclesSortBy';
 import { setVehicles } from '../../store/actions/vehicle';
 import { mapKeys } from 'lodash';
 import { useDispatch } from 'react-redux';
+import FuelHistoryStyle from './FuelHistory.module.scss';
 
 export const FuelHistory = () => {
   const dispatch = useDispatch();
@@ -144,7 +145,7 @@ export const FuelHistory = () => {
 
   return (
     <>
-      <div style={{ marginBottom: '1rem', display: 'flex', float: 'right' }}>
+      <div className={FuelHistoryStyle.action}>
         <Pagination total={5} />
         <Select
           value={sortType}

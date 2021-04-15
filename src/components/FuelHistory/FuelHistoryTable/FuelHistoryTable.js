@@ -1,4 +1,4 @@
-import { Avatar, Space, Table } from 'antd';
+import { Avatar, Space, Table, Typography } from 'antd';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import React from 'react';
 import { format, parseISO } from 'date-fns';
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteVehicle } from '../../../store/actions/vehicle';
 import { VEHICLES_SORT } from '../../../utils/Enums/VehiclesSortBy';
 import { v4 as uuidv4 } from 'uuid';
+import { DATE_GROUP_FORMAT, TIME_FORMAT } from '../../../utils/Constants';
 
 export const FuelHistoryTable = ({ editAction, sortBy }) => {
   const dispatch = useDispatch();
@@ -23,9 +24,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     return obj;
   };
 
-  const renderDateGroupRow = row => <div>{row.time}</div>;
+  const renderDateGroupRow = row => (
+    <Typography.Text>{format(parseISO(row.time), DATE_GROUP_FORMAT)}</Typography.Text>
+  );
 
-  const renderStatusGroupRow = row => <div>{VehicleStatus[row?.status]?.label}</div>;
+  const renderStatusGroupRow = row => (
+    <Typography.Text>{VehicleStatus[row?.status]?.label}</Typography.Text>
+  );
 
   const renderGroupRow = row => (
     <div>{sortBy === VEHICLES_SORT.DATE ? renderDateGroupRow(row) : renderStatusGroupRow(row)}</div>
@@ -50,7 +55,7 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
               <Avatar size="small" src={row?.avatar} />
             </div>
             <div>
-              <div>{row?.name}</div>
+              <Typography.Text>{row?.name}</Typography.Text>
               <div style={{ color: VehicleStatus[row?.status]?.color }}>
                 {VehicleStatus[row?.status]?.label}
               </div>
@@ -67,7 +72,7 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
         if (row.groupRow) {
           return renderContent(text, row);
         }
-        return <>{format(parseISO(text), 'dd/mm/yyyy h:mm a')}</>;
+        return <>{format(parseISO(text), TIME_FORMAT)}</>;
       },
     },
     { title: 'Total KM', dataIndex: 'totalKm', key: 'totalKm', render: renderContent },
@@ -99,7 +104,6 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     let newArr = [];
     for (let i = 0; i < arr.length; i++) {
       const tmpComp = type === VEHICLES_SORT.DATE ? arr[i].time : arr[i].status;
-      debugger;
       if (tmpComp != lastGroup) {
         lastGroup = type === VEHICLES_SORT.DATE ? arr[i].time : arr[i].status;
         newArr.push({ ...arr[i], groupRow: true });
@@ -110,8 +114,6 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
   };
 
   const sort = () => {
-    console.log({ vehicles });
-    debugger;
     if (sortBy === VEHICLES_SORT.STATUS) {
       return addGroupRows(
         Object.values(vehicles).sort(function (a, b) {

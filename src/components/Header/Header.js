@@ -1,8 +1,9 @@
 import React from 'react';
-import { Avatar } from 'antd';
+import { Avatar, Layout, Typography } from 'antd';
+import HeaderStyle from './Header.module.scss';
 export const Header = ({ text }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <div>{text}</div>
+  <Layout.Header className={HeaderStyle.root}>
+    <Typography.Text>{text}</Typography.Text>
     <Avatar size="medium" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-  </div>
+  </Layout.Header>
 );

@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import { VEHICLES } from '../../../utils/Enums/Vehicles';
 
-export const EditVehicleForm = () => {
+export const EditVehicleForm = ({}) => {
   const [form] = Form.useForm();
 
   return (
