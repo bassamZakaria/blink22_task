@@ -75,7 +75,10 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
             </div>
             <div>
               <Typography.Text>{row?.name}</Typography.Text>
-              <div style={{ color: VehicleStatus[row?.status]?.color }}>
+              <div
+                className={FuelHistoryTableStyle.status}
+                style={{ color: VehicleStatus[row?.status]?.color }}
+              >
                 {VehicleStatus[row?.status]?.label}
               </div>
             </div>
