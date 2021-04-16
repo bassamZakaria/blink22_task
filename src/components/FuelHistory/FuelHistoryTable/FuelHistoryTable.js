@@ -118,13 +118,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
           moment(lastGroup).format('DD/MM/YYYY').toString()
         ) {
           lastGroup = arr[i].date;
-          newArr.push({ ...arr[i], groupRow: true });
+          newArr.push({ ...arr[i], groupRow: true, key: uuidv4() });
         }
       }
       if (type === VEHICLES_SORT.STATUS) {
         if (tmpComp !== lastGroup) {
           lastGroup = arr[i].status;
-          newArr.push({ ...arr[i], groupRow: true });
+          newArr.push({ ...arr[i], groupRow: true, key: uuidv4() });
         }
       }
       newArr.push({ ...arr[i], rowKey: uuidv4() });

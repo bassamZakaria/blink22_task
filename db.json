@@ -80,24 +80,26 @@
     {
       "id": 8,
       "key": 58,
-      "date": "2021-04-14T03:48:02Z",
+      "date": "2021-03-12T03:48:02.000Z",
       "totalKm": 30,
       "volume": 97,
       "cost": 89,
       "status": "ACTIVE",
       "avatar": "https://robohash.org/officiispariaturquo.png?size=50x50&set=set1",
-      "name": "VEHICLE_C"
+      "name": "VEHICLE_C",
+      "fuelType": "FUEL_TYPE_A"
     },
     {
       "id": 9,
       "key": 60,
-      "date": "2021-03-12T01:51:50Z",
+      "date": "2021-03-12T01:51:50.000Z",
       "totalKm": 98,
       "volume": 67,
       "cost": 50,
       "status": "ACTIVE",
       "avatar": "https://robohash.org/laboretemporibusaut.png?size=50x50&set=set1",
-      "name": "VEHICLE_E"
+      "name": "VEHICLE_E",
+      "fuelType": "FUEL_TYPE_C"
     },
     {
       "id": 10,

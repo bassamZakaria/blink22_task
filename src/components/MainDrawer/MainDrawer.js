@@ -1,10 +1,11 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Image } from 'antd';
 import { Link } from 'react-router-dom';
 import { Routes } from '../../utils/Enums/Routes';
 import { VehicleIcon } from '../../assets/VehicleIcon';
 import { ReportIcon } from '../../assets/ReportIcon';
 import { PeopleIcon } from '../../assets/PeopleIcon';
+import MenuImage from '../../assets/smartselect_20190706-141800_chromeimage.png';
 
 export const MainDrawer = () => (
   <Layout.Sider theme="light" width={241}>
@@ -14,6 +15,9 @@ export const MainDrawer = () => (
       defaultSelectedKeys={['fuelHistory']}
       defaultOpenKeys={['VEHICLES', 'REPORT']}
     >
+      <Menu.Item style={{ textAlign: 'center' }}>
+        <Image src={MenuImage} />
+      </Menu.Item>
       <Menu.SubMenu
         key="VEHICLES"
         theme="light"

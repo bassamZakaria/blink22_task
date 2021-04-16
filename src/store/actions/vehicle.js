@@ -18,7 +18,23 @@ const setVehicles = (vehicles, page, totalCount) => {
   };
 };
 
-export const addVehicle = vehicle => {
+export const addVehicleAsync = vehicle => {
+  return async dispatch => {
+    const response = await fetch(`http://localhost:8080/vehicles/${vehicle.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(vehicle),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.status === 200) {
+      dispatch(addVehicle(vehicle));
+    }
+  };
+};
+
+const addVehicle = vehicle => {
   return {
     type: ADD_VEHICLE,
     vehicle,

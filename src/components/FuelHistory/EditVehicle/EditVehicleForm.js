@@ -1,8 +1,8 @@
 import React from 'react';
-import { Col, Form, DatePicker, InputNumber, Modal, Row, Select, Typography } from 'antd';
+import { Col, DatePicker, Form, InputNumber, Modal, Row, Select, Typography } from 'antd';
 import { VEHICLES } from '../../../utils/Enums/Vehicles';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVehicle } from '../../../store/actions/vehicle';
+import { addVehicle, addVehicleAsync } from '../../../store/actions/vehicle';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import { FUEL_TYPE } from '../../../utils/Enums/FuelType';
@@ -11,14 +11,13 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const vehicle = useSelector(({ vehicles }) => vehicles.vehicles[vehicleId]);
-  console.log({ vehicle });
 
   const onSave = () => {
     form
       .validateFields()
       .then(values => {
         dispatch(
-          addVehicle({
+          addVehicleAsync({
             ...vehicle,
             name: values.name,
             date: moment(values.date).toISOString(),
@@ -30,7 +29,7 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
         closeModal();
       })
       .catch(info => {
-        console.log('validate');
+        console.log({ info });
       });
   };
 
