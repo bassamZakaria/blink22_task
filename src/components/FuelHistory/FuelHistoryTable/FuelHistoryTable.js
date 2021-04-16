@@ -25,7 +25,7 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
   };
 
   const renderDateGroupRow = row => (
-    <Typography.Text>{format(parseISO(row.time), DATE_GROUP_FORMAT)}</Typography.Text>
+    <Typography.Text>{format(parseISO(row.date), DATE_GROUP_FORMAT)}</Typography.Text>
   );
 
   const renderStatusGroupRow = row => (
@@ -66,8 +66,8 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     },
     {
       title: 'Time',
-      dataIndex: 'time',
-      key: 'time',
+      dataIndex: 'date',
+      key: 'date',
       render: (text, row) => {
         if (row.groupRow) {
           return renderContent(text, row);
@@ -88,7 +88,7 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
         }
         return (
           <Space size="middle">
-            <FormOutlined style={{ color: 'orange' }} onClick={editAction} />
+            <FormOutlined style={{ color: 'orange' }} onClick={() => editAction(row.key)} />
             <DeleteOutlined
               style={{ color: 'red' }}
               onClick={() => dispatch(deleteVehicle(row.key))}
@@ -103,9 +103,9 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     let lastGroup = null;
     let newArr = [];
     for (let i = 0; i < arr.length; i++) {
-      const tmpComp = type === VEHICLES_SORT.DATE ? arr[i].time : arr[i].status;
+      const tmpComp = type === VEHICLES_SORT.DATE ? arr[i].date : arr[i].status;
       if (tmpComp != lastGroup) {
-        lastGroup = type === VEHICLES_SORT.DATE ? arr[i].time : arr[i].status;
+        lastGroup = type === VEHICLES_SORT.DATE ? arr[i].date : arr[i].status;
         newArr.push({ ...arr[i], groupRow: true });
       }
       newArr.push({ ...arr[i], rowKey: uuidv4() });
@@ -130,8 +130,8 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     } else if (sortBy === VEHICLES_SORT.DATE)
       return addGroupRows(
         Object.values(vehicles).sort((a, b) => {
-          const aDate = new Date(a.time);
-          const bDate = new Date(b.time);
+          const aDate = new Date(a.date);
+          const bDate = new Date(b.date);
           if (aDate > bDate) {
             return -1;
           }

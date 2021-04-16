@@ -1,152 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Select, Pagination } from 'antd';
+import { Pagination, Select, Button, Typography } from 'antd';
 import { FuelHistoryTable } from '../../components/FuelHistory/FuelHistoryTable/FuelHistoryTable';
-import { EditVehicle } from '../../components/FuelHistory/EditVehicle/EditVehicle';
 import { VEHICLES_SORT } from '../../utils/Enums/VehiclesSortBy';
 import { setVehicles } from '../../store/actions/vehicle';
 import { mapKeys } from 'lodash';
 import { useDispatch } from 'react-redux';
 import FuelHistoryStyle from './FuelHistory.module.scss';
+import { EditVehicleForm } from '../../components/FuelHistory/EditVehicle/EditVehicleForm';
+import { RightArrowIcon } from '../../assets/RightArrowIcon';
 
 export const FuelHistory = () => {
   const dispatch = useDispatch();
-  const [isEditVehicle, setIsEditVehicle] = useState(false);
+  const [editVehicleId, setEditVehicleId] = useState(undefined);
   const [sortType, setSortType] = useState(VEHICLES_SORT.NONE);
+  let [page, setPage] = useState(1);
+  let [totalCount, setTotalCount] = useState(-1);
 
-  const data = [
-    {
-      key: 4,
-      name: 'Toyota Avanza',
-      time: '2011-08-05T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'ACTIVE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 5,
-      name: 'Toyota Avanza',
-      time: '2011-08-06T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'IN_SHOP',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 6,
-      name: 'Toyota Avanza',
-      time: '2011-08-07T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'OUT_OF_SERVICE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 11,
-      name: 'Toyota Avanza',
-      time: '2011-08-12T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'IN_SHOP',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 12,
-      name: 'Toyota Avanza',
-      time: '2011-08-13T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'OUT_OF_SERVICE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 1,
-      name: 'Toyota Avanza',
-      time: '2011-08-02T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'ACTIVE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 2,
-      name: 'Toyota Avanza',
-      time: '2011-08-10T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'IN_SHOP',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 3,
-      name: 'Toyota Avanza',
-      time: '2011-08-10T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'OUT_OF_SERVICE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 9,
-      name: 'Toyota Avanza',
-      time: '2011-08-10T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'OUT_OF_SERVICE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 10,
-      name: 'Toyota Avanza',
-      time: '2011-08-10T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'ACTIVE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 7,
-      name: 'Toyota Avanza',
-      time: '2011-08-08T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'ACTIVE',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-    {
-      key: 8,
-      name: 'Toyota Avanza',
-      time: '2011-08-09T20:17:46.384Z',
-      totalKm: 5000,
-      volume: '123.35 L',
-      cost: 625,
-      status: 'IN_SHOP',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    },
-  ];
+  const pageCount = 10;
 
   useEffect(() => {
-    function fetchData() {
-      dispatch(setVehicles(mapKeys(data, 'key')));
+    async function fetchData() {
+      const response = await fetch(`http://localhost:8080/vehicles?_page=${page}&_limit=10`);
+      setTotalCount(+response.headers.get('x-total-count'));
+      const data = await response.json();
+      dispatch(setVehicles(mapKeys(data, 'id')));
     }
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <>
       <div className={FuelHistoryStyle.action}>
-        <Pagination total={5} />
+        <div>
+          <Typography.Text>{`${(page - 1) * pageCount + 1}-${
+            page * pageCount > totalCount ? totalCount : page * pageCount
+          } of ${totalCount}`}</Typography.Text>
+        </div>
+        <>
+          <Button
+            icon={<RightArrowIcon />}
+            disabled={page === 1}
+            onClick={() => setPage(prevState => prevState - 1)}
+          />
+          <Button
+            icon={<RightArrowIcon />}
+            disabled={page === Math.ceil(totalCount / pageCount)}
+            onClick={() => setPage(prevState => prevState + 1)}
+          />
+        </>
         <Select
           value={sortType}
           onChange={newValue => setSortType(newValue)}
@@ -157,17 +58,8 @@ export const FuelHistory = () => {
           ))}
         </Select>
       </div>
-      <FuelHistoryTable sortBy={sortType} editAction={() => setIsEditVehicle(true)} />
-      {isEditVehicle && (
-        <Modal
-          title="Edit Fuel Entry"
-          okText={'Save'}
-          visible={isEditVehicle}
-          onCancel={() => setIsEditVehicle(false)}
-        >
-          <EditVehicle />
-        </Modal>
-      )}
+      <FuelHistoryTable sortBy={sortType} editAction={id => setEditVehicleId(id)} />
+      <EditVehicleForm vehicleId={editVehicleId} closeModal={() => setEditVehicleId(undefined)} />
     </>
   );
 };

@@ -38,3 +38,8 @@
     transform: rotate(360deg);
   }
 }
+
+.ant-input-suffix {
+  color: #252631;
+  opacity: 50%;
+}

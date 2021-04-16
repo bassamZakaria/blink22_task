@@ -1,5 +1,11 @@
 .action {
   margin-bottom: 1rem;
   display: flex;
+  align-items: center;
   float: right;
+}
+.action > * {
+  flex: 1 1 auto;
+  text-align: center;
+  margin-right: 1rem;
 }
