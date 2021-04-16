@@ -93,7 +93,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
       render: (text, row) =>
         renderCustomContent(text, row, <>{format(parseISO(text), TIME_FORMAT)}</>),
     },
-    { title: 'Total KM', dataIndex: 'totalKm', key: 'totalKm', render: renderContent },
+    {
+      title: 'Total KM',
+      dataIndex: 'totalKm',
+      key: 'totalKm',
+      render: (text, row) =>
+        renderCustomContent(text, row, <Typography.Text>{row.totalKm} km</Typography.Text>),
+    },
     {
       title: 'Volume',
       dataIndex: 'volume',
@@ -101,7 +107,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
       render: (text, row) =>
         renderCustomContent(text, row, <Typography.Text>{row.volume} L</Typography.Text>),
     },
-    { title: 'Cost', dataIndex: 'cost', key: 'cost', render: renderContent },
+    {
+      title: 'Cost',
+      dataIndex: 'cost',
+      key: 'cost',
+      render: (text, row) =>
+        renderCustomContent(text, row, <Typography.Text>Rp {row.cost}</Typography.Text>),
+    },
     {
       title: 'Action',
       dataIndex: '',
