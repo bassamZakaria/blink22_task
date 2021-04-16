@@ -4,14 +4,26 @@ import React from 'react';
 import { format, parseISO } from 'date-fns';
 import { VehicleStatus } from '../../../utils/Enums/VehicleStatus';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteVehicle } from '../../../store/actions/vehicle';
+import { deleteVehiclesAsync } from '../../../store/actions/vehicle';
 import { VEHICLES_SORT } from '../../../utils/Enums/VehiclesSortBy';
 import { v4 as uuidv4 } from 'uuid';
 import { DATE_GROUP_FORMAT, TIME_FORMAT } from '../../../utils/Constants';
+import FuelHistoryTableStyle from './FuelHistoryTable.module.scss';
+import moment from 'moment';
 
 export const FuelHistoryTable = ({ editAction, sortBy }) => {
   const dispatch = useDispatch();
   const vehicles = useSelector(({ vehicles }) => vehicles.vehicles || {});
+
+  const renderActionCol = row => (
+    <Space size="middle">
+      <FormOutlined style={{ color: 'orange' }} onClick={() => editAction(row.id)} />
+      <DeleteOutlined
+        style={{ color: 'red' }}
+        onClick={() => dispatch(deleteVehiclesAsync(row.id))}
+      />
+    </Space>
+  );
 
   const renderContent = (value, row) => {
     const obj = {
@@ -24,6 +36,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     return obj;
   };
 
+  const renderCustomContent = (text, row, renderComponent) => {
+    if (row.groupRow) {
+      return renderContent(text, row);
+    }
+    return renderComponent;
+  };
+
   const renderDateGroupRow = row => (
     <Typography.Text>{format(parseISO(row.date), DATE_GROUP_FORMAT)}</Typography.Text>
   );
@@ -33,7 +52,7 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
   );
 
   const renderGroupRow = row => (
-    <div>{sortBy === VEHICLES_SORT.DATE ? renderDateGroupRow(row) : renderStatusGroupRow(row)}</div>
+    <>{sortBy === VEHICLES_SORT.DATE ? renderDateGroupRow(row) : renderStatusGroupRow(row)}</>
   );
 
   const columns = [
@@ -68,34 +87,23 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
       title: 'Time',
       dataIndex: 'date',
       key: 'date',
-      render: (text, row) => {
-        if (row.groupRow) {
-          return renderContent(text, row);
-        }
-        return <>{format(parseISO(text), TIME_FORMAT)}</>;
-      },
+      render: (text, row) =>
+        renderCustomContent(text, row, <>{format(parseISO(text), TIME_FORMAT)}</>),
     },
     { title: 'Total KM', dataIndex: 'totalKm', key: 'totalKm', render: renderContent },
-    { title: 'Volume', dataIndex: 'volume', key: 'volume', render: renderContent },
+    {
+      title: 'Volume',
+      dataIndex: 'volume',
+      key: 'volume',
+      render: (text, row) =>
+        renderCustomContent(text, row, <Typography.Text>{row.volume} L</Typography.Text>),
+    },
     { title: 'Cost', dataIndex: 'cost', key: 'cost', render: renderContent },
     {
       title: 'Action',
       dataIndex: '',
       key: 'x',
-      render: (text, row) => {
-        if (row.groupRow) {
-          return renderContent(text, row);
-        }
-        return (
-          <Space size="middle">
-            <FormOutlined style={{ color: 'orange' }} onClick={() => editAction(row.key)} />
-            <DeleteOutlined
-              style={{ color: 'red' }}
-              onClick={() => dispatch(deleteVehicle(row.key))}
-            />
-          </Space>
-        );
-      },
+      render: (text, row) => renderCustomContent(text, row, renderActionCol(row)),
     },
   ];
 
@@ -104,9 +112,20 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
     let newArr = [];
     for (let i = 0; i < arr.length; i++) {
       const tmpComp = type === VEHICLES_SORT.DATE ? arr[i].date : arr[i].status;
-      if (tmpComp != lastGroup) {
-        lastGroup = type === VEHICLES_SORT.DATE ? arr[i].date : arr[i].status;
-        newArr.push({ ...arr[i], groupRow: true });
+      if (type === VEHICLES_SORT.DATE) {
+        if (
+          moment(tmpComp).format('DD/MM/YYYY').toString() !==
+          moment(lastGroup).format('DD/MM/YYYY').toString()
+        ) {
+          lastGroup = arr[i].date;
+          newArr.push({ ...arr[i], groupRow: true });
+        }
+      }
+      if (type === VEHICLES_SORT.STATUS) {
+        if (tmpComp !== lastGroup) {
+          lastGroup = arr[i].status;
+          newArr.push({ ...arr[i], groupRow: true });
+        }
       }
       newArr.push({ ...arr[i], rowKey: uuidv4() });
     }
@@ -148,7 +167,13 @@ export const FuelHistoryTable = ({ editAction, sortBy }) => {
   return (
     <>
       {vehicles && Object.values(vehicles) && (
-        <Table pagination={false} columns={columns} rowKey={'rowKey'} dataSource={sort()} />
+        <Table
+          pagination={false}
+          columns={columns}
+          rowKey={'rowKey'}
+          rowClassName={row => (row.groupRow ? FuelHistoryTableStyle.groupRow : '')}
+          dataSource={sort()}
+        />
       )}
     </>
   );

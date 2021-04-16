@@ -3,18 +3,29 @@ import * as dotProp from 'dot-prop-immutable';
 
 const initalState = {
   vehicles: {},
+  page: 1,
+  totalCount: -1,
 };
 
 const setVehicles = (state, action) => {
-  return dotProp.set(state, 'vehicles', action?.vehicles);
+  let tmpState = dotProp.set(state, 'page', action?.page);
+  tmpState = dotProp.set(tmpState, 'totalCount', action?.totalCount);
+  return dotProp.set(tmpState, 'vehicles', action?.vehicles);
 };
 
 const addVehicle = (state, action) => {
-  return dotProp.set(state, `vehicles.${action.vehicle.key}`, action.vehicle);
+  return dotProp.set(state, `vehicles.${action.vehicle.id}`, action.vehicle);
 };
 
 const deleteVehicle = (state, action) => {
-  return dotProp.delete(state, `vehicles.${action.vehicleId}`);
+  const newTotalCount = state.totalCount - 1;
+  let tmpState = dotProp.set(state, 'totalCount', newTotalCount);
+
+  // const maxPage = Math.ceil(newTotalCount / PAGE_COUNT);
+  // if (maxPage < state.page && state.page !== -1) {
+  //   tmpState = dotProp.set(state, 'page', state.page - 1);
+  // }
+  return dotProp.delete(tmpState, `vehicles.${action.vehicleId}`);
 };
 
 export default (state = initalState, action) => {

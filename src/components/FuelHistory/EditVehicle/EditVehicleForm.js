@@ -1,13 +1,17 @@
 import React from 'react';
-import { Col, DatePicker, Form, Input, Modal, Row, Select, Typography } from 'antd';
+import { Col, Form, DatePicker, InputNumber, Modal, Row, Select, Typography } from 'antd';
 import { VEHICLES } from '../../../utils/Enums/Vehicles';
 import { useDispatch, useSelector } from 'react-redux';
 import { addVehicle } from '../../../store/actions/vehicle';
+import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
+import { FUEL_TYPE } from '../../../utils/Enums/FuelType';
 
 export const EditVehicleForm = ({ vehicleId, closeModal }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const vehicle = useSelector(({ vehicles }) => vehicles.vehicles[vehicleId]);
+  console.log({ vehicle });
 
   const onSave = () => {
     form
@@ -17,8 +21,10 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
           addVehicle({
             ...vehicle,
             name: values.name,
+            date: moment(values.date).toISOString(),
             totalKm: values.totalKm,
             volume: values.volume,
+            fuelType: values.fuelType,
           })
         );
         closeModal();
@@ -42,47 +48,51 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
         form={form}
         initialValues={{
           name: vehicle?.name,
-          // date: vehicle?.date,
+          date: moment(vehicle?.date),
           totalKm: vehicle?.totalKm,
           volume: vehicle?.volume,
         }}
       >
+        <Typography.Text type="secondary">Vehicle</Typography.Text>
         <Form.Item name="name" rules={[{ required: true }]}>
-          <Typography.Text type="secondary">Vehicle</Typography.Text>
           <Select>
             {Object.entries(VEHICLES).map(([key, label]) => (
-              <Select.Option value={key}>{label}</Select.Option>
+              <Select.Option key={uuidv4()} value={key}>
+                {label}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
         <Row gutter={16}>
           <Col className="gutter-row" span={12}>
+            <Typography.Text type="secondary">Start Date</Typography.Text>
             <Form.Item name="date" rules={[{ required: true }]}>
-              <Typography.Text type="secondary">Start Date</Typography.Text>
-              <DatePicker style={{ width: '100%' }} />
+              <DatePicker showTime style={{ width: '100%' }} />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={12}>
+            <Typography.Text type="secondary">Odometer</Typography.Text>
             <Form.Item name="totalKm" rules={[{ required: true }]}>
-              <Typography.Text type="secondary">Odometer</Typography.Text>
-              <Input suffix="Kms" />
+              <InputNumber style={{ width: '100%' }} suffix="Kms" />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col className="gutter-row" span={12}>
+            <Typography.Text type="secondary">Volume</Typography.Text>
             <Form.Item name="volume" rules={[{ required: true }]}>
-              <Typography.Text type="secondary">Volume</Typography.Text>
-              <Input suffix="Ltrs" />
+              <InputNumber style={{ width: '100%' }} suffix="Ltrs" />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={12}>
+            <Typography.Text type="secondary">Fuel Type(optional)</Typography.Text>
             <Form.Item name="fuelType">
-              <Typography.Text type="secondary">Fuel Type(optional)</Typography.Text>
-              <Select placeholder="Select a option and change input text above" allowClear>
-                <Select.Option value="male">male</Select.Option>
-                <Select.Option value="female">female</Select.Option>
-                <Select.Option value="other">other</Select.Option>
+              <Select placeholder="Select One" allowClear>
+                {Object.entries(FUEL_TYPE).map(([key, label]) => (
+                  <Select.Option key={uuidv4()} value={key}>
+                    {label}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>

@@ -1,51 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { Pagination, Select, Button, Typography } from 'antd';
+import { Button, Select, Typography } from 'antd';
 import { FuelHistoryTable } from '../../components/FuelHistory/FuelHistoryTable/FuelHistoryTable';
 import { VEHICLES_SORT } from '../../utils/Enums/VehiclesSortBy';
-import { setVehicles } from '../../store/actions/vehicle';
-import { mapKeys } from 'lodash';
-import { useDispatch } from 'react-redux';
+import { setVehiclesAsync } from '../../store/actions/vehicle';
+import { useDispatch, useSelector } from 'react-redux';
 import FuelHistoryStyle from './FuelHistory.module.scss';
 import { EditVehicleForm } from '../../components/FuelHistory/EditVehicle/EditVehicleForm';
 import { RightArrowIcon } from '../../assets/RightArrowIcon';
+import { v4 as uuidv4 } from 'uuid';
+import { LeftArrowIcon } from '../../assets/LeftArrowIcon';
+import { PAGE_COUNT } from '../../utils/Constants';
 
 export const FuelHistory = () => {
   const dispatch = useDispatch();
   const [editVehicleId, setEditVehicleId] = useState(undefined);
+  let page = useSelector(({ vehicles }) => vehicles.page || 1);
+  const totalCount = useSelector(({ vehicles }) => vehicles.totalCount || -1);
   const [sortType, setSortType] = useState(VEHICLES_SORT.NONE);
-  let [page, setPage] = useState(1);
-  let [totalCount, setTotalCount] = useState(-1);
-
-  const pageCount = 10;
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(`http://localhost:8080/vehicles?_page=${page}&_limit=10`);
-      setTotalCount(+response.headers.get('x-total-count'));
-      const data = await response.json();
-      dispatch(setVehicles(mapKeys(data, 'id')));
+      dispatch(setVehiclesAsync(page));
     }
     fetchData();
-  }, [page]);
+  }, [dispatch, totalCount, page]);
 
   return (
     <>
       <div className={FuelHistoryStyle.action}>
         <div>
-          <Typography.Text>{`${(page - 1) * pageCount + 1}-${
-            page * pageCount > totalCount ? totalCount : page * pageCount
+          <Typography.Text>{`${(page - 1) * PAGE_COUNT + 1}-${
+            page * PAGE_COUNT > totalCount ? totalCount : page * PAGE_COUNT
           } of ${totalCount}`}</Typography.Text>
         </div>
         <>
           <Button
-            icon={<RightArrowIcon />}
+            icon={<LeftArrowIcon />}
             disabled={page === 1}
-            onClick={() => setPage(prevState => prevState - 1)}
+            onClick={() => dispatch(setVehiclesAsync(page - 1))}
           />
           <Button
             icon={<RightArrowIcon />}
-            disabled={page === Math.ceil(totalCount / pageCount)}
-            onClick={() => setPage(prevState => prevState + 1)}
+            disabled={page === Math.ceil(totalCount / PAGE_COUNT)}
+            onClick={() => dispatch(setVehiclesAsync(page + 1))}
           />
         </>
         <Select
@@ -54,7 +51,10 @@ export const FuelHistory = () => {
           style={{ width: 120 }}
         >
           {Object.values(VEHICLES_SORT).map(value => (
-            <Select.Option value={value}>{value}</Select.Option>
+            <Select.Option key={uuidv4()} value={value}>
+              <Typography.Text style={{ opacity: '50%' }}>Sort: </Typography.Text>
+              {value}
+            </Select.Option>
           ))}
         </Select>
       </div>

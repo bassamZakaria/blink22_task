@@ -1,5 +1,5 @@
-import { DefaultPage } from '../../pages/DefaultPage';
-import { FuelHistory } from '../../pages/FuelHistory/FuelHistory';
+import { DefaultPage } from '../../containers/DefaultPage';
+import { FuelHistory } from '../../containers/FuelHistory/FuelHistory';
 import React from 'react';
 
 export const Routes = {
@@ -55,5 +55,9 @@ export const Routes = {
       },
     },
   },
-  PEOPLE: undefined,
+  PEOPLE: {
+    path: '/people',
+    label: 'People',
+    comp: <DefaultPage text={'People'} />,
+  },
 };
