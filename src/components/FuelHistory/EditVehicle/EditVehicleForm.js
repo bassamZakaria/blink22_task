@@ -72,7 +72,7 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
           <Col className="gutter-row" span={12}>
             <Typography.Text type="secondary">Odometer</Typography.Text>
             <Form.Item name="totalKm" rules={[{ required: true }]}>
-              <InputNumber style={{ width: '100%' }} suffix="Kms" />
+              <InputNumber min={1} style={{ width: '100%' }} suffix="Kms" />
             </Form.Item>
           </Col>
         </Row>
@@ -80,7 +80,7 @@ export const EditVehicleForm = ({ vehicleId, closeModal }) => {
           <Col className="gutter-row" span={12}>
             <Typography.Text type="secondary">Volume</Typography.Text>
             <Form.Item name="volume" rules={[{ required: true }]}>
-              <InputNumber style={{ width: '100%' }} suffix="Ltrs" />
+              <InputNumber min={1} style={{ width: '100%' }} suffix="Ltrs" />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={12}>
