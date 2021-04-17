@@ -1,3 +1,5 @@
+Make sure you install json-server and run it on port 8080 use this command json-server --watch db.json --port 8080
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
